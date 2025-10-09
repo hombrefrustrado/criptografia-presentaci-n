@@ -50,6 +50,7 @@ def descifradoCesarAlfabetoInglesMAYGeneralizado(args):
         i = i + 1
         # devuelve el resultado
     print(resultado)
+    
 def build_parser():
     parser = argparse.ArgumentParser(description='Cifrado cesar, necesario especificar le numero de saltos')
     sub = parser.add_subparsers(dest='cmd')
@@ -63,8 +64,9 @@ def build_parser():
     descifrar_parser.add_argument('-c', type=int, default=3, help='Cantidad de saltos en el descifrado')
     descifrar_parser.add_argument('-m', type=str, required=True, help='Mensaje a descifrar')
     descifrar_parser.set_defaults(func=descifradoCesarAlfabetoInglesMAYGeneralizado)
-
+    
     return parser
+
 if __name__== '__main__':
     parser = build_parser()
     args = parser.parse_args()
