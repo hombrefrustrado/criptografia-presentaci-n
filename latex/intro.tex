@@ -1,0 +1,352 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsmath}
+
+\title{Criptografía Exposición}
+\author{Francisco}
+\date{October 2025}
+
+\begin{document}
+\maketitle  % Solo se usa una vez al inicio
+
+\section{XOR}
+
+\begin{center}
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+    Valor M & Valor K & $M \oplus K$ & $(M \oplus K) \oplus K$ \\
+        \hline
+            0 & 0 & $0$ & $0$ \\
+            0 & 1 & $1$ & $0$ \\
+            1 & 0 & $1$ & $1$ \\
+            1 & 1 & $0$ & $1$ \\
+        \hline
+    \end{tabular}
+\end{center}
+
+\bigskip
+La propiedad de $\oplus$ es: $M = (M \oplus K) \oplus K$
+\section{Definición}
+
+Dos números enteros \(a\) y \(b\) se dicen \textbf{coprimos} (o primos relativos) si no tienen ningún divisor común aparte de 1.  
+Formalmente:
+
+\[
+\gcd(a, b) = 1
+\]
+
+donde \(\gcd\) representa el \textit{máximo común divisor}.
+
+\section{Ejemplos}
+
+\begin{itemize}
+    \item \(8\) y \(15\) son coprimos porque \(\gcd(8, 15) = 1\)
+    \item \(12\) y \(18\) no son coprimos porque \(\gcd(12, 18) = 6 \neq 1\)
+    \item \(7\) y \(20\) son coprimos porque \(\gcd(7, 20) = 1\)
+\end{itemize}
+
+\section{Uso en criptografía}
+
+En criptografía, especialmente en RSA o cifrados basados en congruencias, se usan números coprimos para garantizar que ciertas operaciones sean invertibles, como la generación de claves.  
+Por ejemplo, si \(e\) es un número coprimo con \(\varphi(n)\) (la función totiente de Euler), entonces existe un número \(d\) tal que:
+
+\[
+e \cdot d \equiv 1 \pmod{\varphi(n)}
+\]
+
+Esto asegura que el cifrado y el descifrado sean posibles.
+\newpage
+
+\section*{RSA}
+
+Ejemplos con números pequeños
+
+\textbf{Paso 1: Elegir dos números primos pequeños.}
+
+\[
+p = 5, \quad q = 11
+\]
+
+\textbf{Paso 2: Calcular el módulo } \( n \):
+\[
+n = p \times q = 5 \times 11 = 55
+\]
+
+\textbf{Paso 3: Calcular la función totiente de Euler } \( \varphi(n) \):
+\[
+\varphi(n) = (p - 1)(q - 1) = 4 \times 10 = 40
+\]
+
+\textbf{Paso 4: Elegir un exponente público } \( e \) tal que \( \gcd(e, \varphi(n)) = 1 \).
+
+Escogemos:
+\[
+e = 3
+\]
+(verificamos que \(\gcd(3, 40) = 1\))
+
+\textbf{Paso 5: Calcular el exponente privado } \( d \) tal que:
+\[
+e \cdot d \equiv 1 \pmod{\varphi(n)}
+\]
+
+Buscamos \( d \) que satisfaga:
+\[
+3d \equiv 1 \pmod{40}
+\]
+
+Probando valores pequeños:
+\[
+3 \times 27 = 81 \equiv 1 \pmod{40}
+\]
+Por tanto:
+\[
+d = 27
+\]
+
+\textbf{Clave pública: } \( (e, n) = (3, 55) \)
+
+\textbf{Clave privada: } \( (d, n) = (27, 55) \)
+
+\bigskip
+\textbf{Paso 6: Cifrar un mensaje.}
+
+Sea el mensaje \( M = 9 \).
+
+El cifrado se calcula como:
+\[
+C \equiv M^e \pmod{n}
+\]
+
+\[
+C \equiv 9^3 \pmod{55} = 729 \pmod{55} = 14
+\]
+
+Por tanto, el mensaje cifrado es:
+\[
+C = 14
+\]
+
+\bigskip
+\textbf{Paso 7: Descifrar el mensaje.}
+
+\[
+M \equiv C^d \pmod{n}
+\]
+
+\[
+M \equiv 14^{27} \pmod{55}
+\]
+
+Calculando (por reducción modular sucesiva):
+\[
+14^{27} \equiv 9 \pmod{55}
+\]
+
+Por tanto, se recupera el mensaje original:
+\[
+M = 9
+\]
+
+\bigskip
+
+Con \( p=5, q=11, e=3, d=27 \), el sistema RSA funciona así:
+\[
+M = 9 \;\xrightarrow{\text{Cifrado}}\; C = 14 \;\xrightarrow{\text{Descifrado}}\; M = 9
+\]
+
+\newpage
+\section*{Criptografía híbrida}
+
+La \textbf{criptografía híbrida} consiste en combinar criptografía asimétrica y simétrica 
+para aprovechar las ventajas de ambas.
+
+\bigskip
+Durante el establecimiento de una comunicación segura:
+\begin{itemize}
+    \item Se utiliza la \textbf{criptografía asimétrica} (por ejemplo, RSA o ECC) 
+    para intercambiar de manera segura una \textbf{clave simétrica de sesión}, 
+    incluso si el canal está comprometido.
+    \item Una vez compartida la clave, se emplea \textbf{criptografía simétrica} 
+    (por ejemplo, AES) para cifrar y descifrar los mensajes, ya que es 
+    más \textbf{rápida y eficiente} para grandes volúmenes de datos.
+\end{itemize}
+
+\bigskip
+Este enfoque garantiza la \textbf{confidencialidad} y la \textbf{eficiencia} 
+de la comunicación.  
+Se utiliza en protocolos como \textbf{TLS/SSL}, \textbf{PGP} o \textbf{Signal}, 
+donde la clave de sesión se intercambia de forma asimétrica, y luego se usa 
+para el cifrado simétrico del tráfico.
+\newpage
+
+\section*{Funciones hash}
+
+Una \textbf{función hash} es una función matemática que transforma una entrada
+de longitud arbitraria en una salida de longitud fija. Se utiliza ampliamente en
+criptografía, almacenamiento y verificación de datos.
+
+Formalmente, se define como:
+\[
+h : \mathcal{D} \rightarrow \mathcal{C}
+\]
+donde $\mathcal{D}$ es el conjunto de entradas posibles y $\mathcal{C}$ el conjunto
+de valores hash (por ejemplo, cadenas binarias de 256 bits).
+
+
+Se usa para la identificación de la información y estan caracterizada por una alta entropia, un pequeño cambio en la entrada produce un gran cambio en la salida
+
+\section*{Propiedades axiomatizadas de una función hash}
+
+Sea una función hash:
+\[
+h : \mathcal{D} \rightarrow \mathcal{C},
+\]
+donde $\mathcal{D}$ es el conjunto de mensajes posibles y $\mathcal{C}$ es el conjunto de valores hash de longitud fija.  
+
+\begin{enumerate}
+    \item \textbf{Determinismo:} 
+    \[
+    \forall x \in \mathcal{D}, \quad h(x) \text{ siempre produce el mismo resultado.}
+    \]
+
+    \item \textbf{Alta entropía / Avalancha:} 
+    \[
+    \forall x, y \in \mathcal{D}, \; x \neq y \text{ con pequeñas diferencias } \implies h(x) \text{ y } h(y) \text{ son prácticamente independientes.}
+    \]
+    En términos de probabilidad:
+    \[
+    \Pr[h(x) = h(y)] \approx 2^{-n}, \quad n = |\mathcal{C}| \text{ (bits de hash).}
+    \]
+
+    \item \textbf{Irreversibilidad:} 
+    \[
+    \text{No existe } h^{-1} \text{ tal que } h^{-1}(h(x)) = x \text{ para todo } x \in \mathcal{D}.
+    \]
+
+    \item \textbf{Resistencia a colisiones:} 
+    \[
+    \text{Es computacionalmente difícil encontrar } x_1 \neq x_2 \text{ tales que } h(x_1) = h(x_2).
+    \]
+\end{enumerate}
+
+Estas propiedades explican por qué una función hash es útil para verificación de integridad, autenticación y seguridad criptográfica.
+
+
+\section*{¿Por qué una función hash no es biyectiva?}
+
+Una función hash se puede modelar como:
+
+\[
+h : \mathcal{D} \rightarrow \mathcal{C}
+\]
+
+donde:
+\begin{itemize}
+  \item $\mathcal{D}$ es el conjunto de todos los mensajes posibles.
+  \item $\mathcal{C}$ es el conjunto de valores hash posibles.
+\end{itemize}
+
+Dado que:
+\[
+|\mathcal{D}| \gg |\mathcal{C}|
+\]
+(el dominio es mucho más grande que el codominio),
+
+por el \textbf{principio del palomar} se cumple que:
+
+\[
+\exists\, x_1, x_2 \in \mathcal{D}, \; x_1 \neq x_2 \quad \text{tales que} \quad h(x_1) = h(x_2)
+\]
+
+Por tanto, $h$ no es inyectiva.
+
+Y dado que toda función biyectiva debe ser inyectiva y sobreyectiva, se concluye:
+
+\[
+\text{No inyectiva} \;\Rightarrow\; \text{No biyectiva.}
+\]
+\section*{Consecuencia: no existe inversa de la función hash}
+
+Una función hash se define como:
+\[
+h : \mathcal{D} \rightarrow \mathcal{C}
+\]
+
+Si $h$ fuera biyectiva, existiría una función inversa:
+\[
+h^{-1} : \mathcal{C} \rightarrow \mathcal{D}
+\]
+tal que:
+\[
+h^{-1}(h(x)) = x \quad \forall x \in \mathcal{D}
+\]
+
+Sin embargo, dado que $h$ \textbf{no es inyectiva}:
+\[
+\exists\, x_1, x_2 \in \mathcal{D}, \; x_1 \neq x_2 \quad \text{tales que} \quad h(x_1) = h(x_2)
+\]
+
+entonces $h^{-1}(h(x))$ no estaría bien definida, ya que el mismo valor $h(x)$ 
+podría corresponder a múltiples entradas distintas.
+
+Por tanto, no existe una función inversa única:
+\[
+h^{-1} \; \text{no existe.}
+\]
+
+En otras palabras, \textbf{no es posible recuperar el mensaje original a partir del hash},
+lo que aporta la propiedad de \textbf{irreversibilidad} o \textbf{resistencia a preimagen}.
+
+\newpage
+\section*{SHA (Secure Hash Algorithm)}
+
+El \textbf{Secure Hash Algorithm (SHA)} es una familia de funciones hash criptográficas
+diseñadas por la \textit{NSA} y estandarizadas por el \textit{NIST} en el estándar FIPS 180.
+Su objetivo es transformar una entrada de longitud arbitraria en una salida de longitud fija,
+llamada \textbf{resumen} o \textbf{digest}.
+
+\bigskip
+Se utiliza ampliamente en:
+\begin{itemize}
+    \item Verificación de integridad de datos.
+    \item Firmas digitales.
+    \item Almacenamiento seguro de contraseñas.
+    \item Generación de identificadores únicos.
+\end{itemize}
+
+\bigskip
+\textbf{Versiones principales:}
+
+\begin{center}
+\begin{tabular}{|c|c|l|}
+\hline
+\textbf{Versión} & \textbf{Longitud del hash} & \textbf{Comentario} \\
+\hline
+SHA-1 & 160 bits & Obsoleta, existen colisiones conocidas. \\
+SHA-2 (... SHA-512) & 224–512 bits & Segura y ampliamente utilizada. \\
+SHA-3 & 224–512 bits & Basada en KECCAK, diseño moderno y robusto. \\
+\hline
+\end{tabular}
+\end{center}
+
+\bigskip
+\textbf{Propiedades:}
+\begin{enumerate}
+    \item \textbf{Determinismo:} la misma entrada produce siempre el mismo hash.
+    \item \textbf{Avalancha:} un pequeño cambio en la entrada produce un cambio drástico en la salida.
+    \item \textbf{Irreversibilidad:} es computacionalmente imposible recuperar la entrada original.
+    \item \textbf{Resistencia a colisiones:} es inviable encontrar dos entradas distintas con el mismo hash.
+\end{enumerate}
+
+\bigskip
+\textbf{Ejemplo:}
+\[
+\begin{aligned}
+\text{SHA-256("hola")} &= \texttt{b1946ac92492d2347c6235b4d2611184\ldots} \\
+\text{SHA-256("Hola")} &= \texttt{4d186321c1a7f0f354b297e8914ab240\ldots}
+\end{aligned}
+\]
+Un pequeño cambio en la entrada genera un resultado completamente diferente.
+
+\end{document}
