@@ -9,46 +9,46 @@ def cifradoCesarAlfabetoInglesMAYGeneralizado(args):
     pos = args.c
     # Definir la nueva cadena resultado
     resultado = ''
-    # Realizar el "cifrado", sabiendo que A = 65, Z = 90, a = 97, z = 122
+
     i = 0
     while i < len(cadena):
-        # Recoge el caracter a cifrar
+        
         ordenClaro = ord(cadena[i])
         ordenCifrado = 0
-        # Cambia el caracter a cifrar
         if (ordenClaro >= 65 and ordenClaro <= 90):
             ordenCifrado = (((ordenClaro - 65) + pos) % 26) + 65
-            # Añade el caracter cifrado al resultado
+
         elif( ordenClaro >= 97 and ordenClaro <= 122):
             ordenCifrado = (((ordenClaro - 97) + pos) % 26) + 97
-
+        else:
+            ordenCifrado = ordenClaro
         resultado = resultado + chr(ordenCifrado)
         i = i + 1
-        # devuelve el resultado
+
     print(resultado)
 
 def descifradoCesarAlfabetoInglesMAYGeneralizado(args):
     """Devuelve un cifrado Cesar tradicional (+3)"""
     cadena = args.m
     pos = args.c
-    # Definir la nueva cadena resultado
+
     resultado = ''
-    # Realizar el "cifrado", sabiendo que A = 65, Z = 90, a = 97, z = 122
+
     i = 0
     while i < len(cadena):
-        # Recoge el caracter a cifrar
         ordenClaro = ord(cadena[i])
         ordenCifrado = 0
-        # Cambia el caracter a cifrar
+
         if (ordenClaro >= 65 and ordenClaro <= 90):
             ordenCifrado = (((ordenClaro - 65) - pos) % 26) + 65
-            # Añade el caracter cifrado al resultado
+
         elif( ordenClaro >= 97 and ordenClaro <= 122):
             ordenCifrado = (((ordenClaro - 97) - pos) % 26) + 97
-            # si el caracter es mayuscula
+        else:
+            ordenCifrado = ordenClaro
         resultado = resultado + chr(ordenCifrado)
         i = i + 1
-        # devuelve el resultado
+
     print(resultado)
     
 def build_parser():

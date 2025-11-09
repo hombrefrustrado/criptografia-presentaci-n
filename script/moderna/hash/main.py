@@ -23,7 +23,7 @@ def hash_text(args):
     else:
         raise ValueError("Metodo no encontrado")
 
-def generarhashImagen(args):
+def generarhashArchivo(args):
     imagen = args.i1
     metodo = args.t.upper()
     h_class = HASH_METHODS[metodo]
@@ -31,8 +31,9 @@ def generarhashImagen(args):
     with open(imagen, "rb") as f:  # 'rb' = read bytes
         dataImagen1 = f.read()
     h = h_class.new(data=dataImagen1)
-    print(f"El hash de la imagen es:\n{h.hexdigest()}")
-def compararImagen(args):
+    print(f"El hash del archivo es:\n{h.hexdigest()}")
+
+def compararArchivo(args):
     imagen1 = args.i1
     imagen2 = args.i2
 
@@ -47,9 +48,9 @@ def compararImagen(args):
     hashImagen2 = h.hexdigest()
 
     if (hashImagen1==hashImagen2):
-        print("Las imagenes que has introducido son iguales")
+        print("Los archivos que has introducido son iguales")
     else:
-        print("Las imagenes son diferentes")
+        print("Los archivos son diferentes")
 
 def build_parser():
     parser = argparse.ArgumentParser(description="Calculo del Hash SHA")
@@ -66,20 +67,20 @@ def build_parser():
     haseo_parser.add_argument('-m', type=str, required=True, help='Mensaje a hashear')
     haseo_parser.set_defaults(func=hash_text)
 
-    hash_imagen = sub.add_parser('hashImagen', help="Incluye el metodo de hasheo y la imagen a hashear")
+    hash_imagen = sub.add_parser('hashArchivo', help="Incluye el metodo de hasheo y la imagen a hashear")
     hash_imagen.add_argument('-t', 
                               type=str, 
                               required=True,
                               choices=HASH_METHODS.keys(),
                               help=f"Método de hash disponible ({', '.join(HASH_METHODS.keys())}"
                               )
-    hash_imagen.add_argument('-i1', type=str, required=True, help='imagen a hashear')
-    hash_imagen.set_defaults(func=generarhashImagen)
+    hash_imagen.add_argument('-i1', type=str, required=True, help='archivo a hashear')
+    hash_imagen.set_defaults(func=generarhashArchivo)
 
-    comparador_parser = sub.add_parser('comparar', help='indica dos imagenes para comparar')
-    comparador_parser.add_argument('-i1', type=str, required=True, help='imagen a hashear')
-    comparador_parser.add_argument('-i2', type=str, required=True, help='imagen a hashear')
-    comparador_parser.set_defaults(func=compararImagen)
+    comparador_parser = sub.add_parser('comparar', help='indica dos archivo para comparar')
+    comparador_parser.add_argument('-i1', type=str, required=True, help='archivo a hashear')
+    comparador_parser.add_argument('-i2', type=str, required=True, help='archivo a hashear')
+    comparador_parser.set_defaults(func=compararArchivo)
     
     
     return parser
